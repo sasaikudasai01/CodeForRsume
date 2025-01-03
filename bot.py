@@ -175,18 +175,14 @@ def maket_text_create(message):
 
 def get_random_model_info():
     random_model = random.choice(data)  # Выбираем случайную запись
-    modelId = random_model['{id}']
+    modelId = random_model['{modelId}']
     modelName = random_model['{modelName}']
-    modelAge = random_model['{modelAge}']
-    modelHeight = random_model['{modelHeight}']
-    modelWeight = random_model['{modelWeight}']
-    modelPhoto = random_model['{photo}']
-    modelPrice = random_model['{modelPrice}']
-    PriceNight = random_model['{PriceNight}']
-    modelBoobs = random_model['{modelBoobs}']
+    modelColor = random_model['{modelColor}']
+    modelMaxSpeed = random_model['{modelMaxSpeed}']
+    modelPhoto = random_model['{modelPhoto}']
 
     data.remove(random_model)  # Удаляем выбранную запись из данных
-    return modelName, modelAge, modelHeight, modelWeight, modelId, modelPhoto, modelPrice, PriceNight, modelBoobs
+    return modelId, modelName, modelColor, modelMaxSpeed, modelPhoto
 
 
 def send_handle_channel_button_message(chat_id, message_id, call):
@@ -201,7 +197,7 @@ def send_handle_channel_button_message(chat_id, message_id, call):
     change_kanal_name_button = InlineKeyboardButton("Изменить название", callback_data="change_kanal_name_clicked")
     maket_edit_button = InlineKeyboardButton("Редактировать макет", callback_data="maket_edit_clicked")
     kanal_delete_button = InlineKeyboardButton("Удалить канал", callback_data="kanal_delete_clicked")
-    create_post_button = InlineKeyboardButton("Создать 5 постов", callback_data="create_post_clicked")
+    create_post_button = InlineKeyboardButton("Создать 3 поста", callback_data="create_post_clicked")
     back_button = InlineKeyboardButton("Назад", callback_data="kanal_create_back_button_clicked")
     markup.add(change_kanal_name_button, create_post_button)
     markup.add(maket_edit_button, kanal_delete_button)
@@ -310,22 +306,20 @@ def create_post(call):
     global maket_dict
     global current_kanal
 
-    for _ in range(5):
+    for _ in range(3):
         # Получаем случайные данные модели для каждого макета
-        modelName, modelAge, modelHeight, modelWeight, modelId, modelPhoto, modelPrice, PriceNight, modelBoobs = get_random_model_info()
+        modelId, modelName, modelColor, modelMaxSpeed, modelPhoto = get_random_model_info()
 
         for kanal in kanal_dict:
             if kanal["name"] == current_kanal:
                 message_id_to_copy = kanal["maket_text"]
 
         # Заменяем шаблоны в тексте на реальные данные
-        message_id_to_copy = message_id_to_copy.replace('modelName', modelName)\
-                                    .replace('modelAge', str(modelAge))\
-                                    .replace('modelHeight', str(modelHeight))\
-                                    .replace('modelWeight', str(modelWeight))\
-                                    .replace('modelPrice', str(modelPrice))\
-                                    .replace('PriceNight', str(PriceNight))\
-                                    .replace('modelBoobs', str(modelBoobs))
+        message_id_to_copy = (message_id_to_copy.replace('modelId', str(modelId))\
+                                                .replace('modelName', str(modelName))\
+                                                .replace('modelColor', str(modelColor))\
+                                                .replace('modelMaxSpeed', str(modelMaxSpeed))\
+                                                .replace('modelPhoto', str(modelPhoto)))
 
         # Формируем список медиа для отправки
         media_group = []
